@@ -1,8 +1,9 @@
 import csv
 
+from .base import BaseStrategy
 from ..converter.shakepay import ShakepayConverter
 
-class ShakepayStrategy:
+class ShakepayStrategy(BaseStrategy):
 
   def __init__(self):
     self.converter = ShakepayConverter()
