@@ -6,7 +6,7 @@ def factory(exchange_name, *args, **kwargs):
 
   try:
     module_name = exchange_name
-    class_name = exchange_name.capitaliza() + 'Strategy'
+    class_name = exchange_name.capitalize() + 'Strategy'
     strategy_module = import_module('.' + module_name, package='strategy')
     strategy_class = getattr(strategy_module, class_name)
     instance = strategy_class(*args, **kwargs)
