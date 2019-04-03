@@ -17,7 +17,7 @@ class ShakepayConverterTest(unittest.TestCase):
     self.assertEqual('', result.cost)
 
   def test_with_data(self):
-    data = {'Date': '2018-05-18T13:08:40+0000',
+    data = {'Date': '2018-05-18T13:08:40+00',
             'Amount Debited': '111.22',
             'Amount Credited': '0.123',
             'Credit Currency': 'BTC',
