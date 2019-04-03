@@ -16,4 +16,5 @@ if __name__ == '__main__':
   path.append(dir('.'))
 
   args = parse_args()
-  main.generate_report(args.file, args.exchange)
+  results = main.generate_report(args.file, args.exchange, 'csv')
+  print('\n'.join(results))
