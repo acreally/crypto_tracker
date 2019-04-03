@@ -1,6 +1,6 @@
 import unittest
 
-from tracker.date import format
+from date import format
 
 class DateFormatTest(unittest.TestCase):
 

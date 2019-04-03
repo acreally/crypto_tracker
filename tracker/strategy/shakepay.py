@@ -1,7 +1,7 @@
 import csv
 
-from .base import BaseStrategy
-from ..converter.shakepay import ShakepayConverter
+from strategy.base import BaseStrategy
+from converter.shakepay import ShakepayConverter
 
 class ShakepayStrategy(BaseStrategy):
 

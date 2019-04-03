@@ -1,6 +1,6 @@
 import unittest
 
-from tracker.converter.shakepay import ShakepayConverter
+from converter.shakepay import ShakepayConverter
 
 class ShakepayConverterTest(unittest.TestCase):
   def setUp(self):

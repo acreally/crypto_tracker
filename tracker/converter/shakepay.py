@@ -1,5 +1,5 @@
-from ..date.format import convert_datetime
-from ..model.entry import Entry
+from date.format import convert_datetime
+from model.entry import Entry
 
 class ShakepayConverter:
   DATE = 'Date'

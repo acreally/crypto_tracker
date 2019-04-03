@@ -1,8 +1,8 @@
 import os
 import unittest
 
-from tracker.model.entry import Entry
-from tracker.strategy.shakepay import ShakepayStrategy
+from model.entry import Entry
+from strategy.shakepay import ShakepayStrategy
 
 class ShakepayStrategyTest(unittest.TestCase):
   def setUp(self):
@@ -83,4 +83,4 @@ class ShakepayStrategyTest(unittest.TestCase):
     self.assertEqual(expected, result)
 
   def build_filename_with_path(self, filename):
-    return os.path.join(os.path.dirname(os.path.dirname(__file__)), 'resources', 'shakepay', filename)
+    return os.path.join(os.path.dirname(__file__), 'resources', 'shakepay', filename)

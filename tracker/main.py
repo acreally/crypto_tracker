@@ -1,7 +1,9 @@
-from strategy import factory
+from factory import get_instance
 
+from strategy.base import BaseStrategy
 
 def generate_report(filename, exchange):
-  conversion_strategy = factory(exchange)
+  strategy_class = exchange.capitalize() + 'Strategy'
+  conversion_strategy = get_instance('strategy.' + exchange, strategy_class, BaseStrategy)
   converted_data = conversion_strategy.convert_data(filename)
-  print(convert_data)
+  print(converted_data)
