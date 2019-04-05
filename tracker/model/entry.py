@@ -3,19 +3,19 @@ from dataclasses import dataclass
 
 @dataclass
 class Entry:
-  currency = ''
-  date = ''
-  rate = 0
-  deposit = 0
-  cost = ''
-  withdrawl = 0
-  proceeds = ''
-  average_cost_basis = ''
-  fee = 0
-  fee_cost = ''
-  sell_fee = 0
-  network_fee = 0
-  running_deposits = ''
-  running_total_cost = ''
-  running_average_cost = ''
-  note = ''
+  currency: str = ''
+  date: str = ''
+  rate: str = ''
+  deposit: str = ''
+  cost: str = ''
+  withdrawl: str = ''
+  proceeds: str = ''
+  average_cost_basis: str = ''
+  fee: str = ''
+  fee_cost: str = ''
+  sell_fee: str = ''
+  network_fee: str = ''
+  running_deposits: str = ''
+  running_total_cost: str = ''
+  running_average_cost: str = ''
+  note: str = ''

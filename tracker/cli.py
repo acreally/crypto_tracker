@@ -1,6 +1,6 @@
 import argparse
 
-import main
+import orchestrator
 
 def parse_args():
   parser = argparse.ArgumentParser()
@@ -16,5 +16,6 @@ if __name__ == '__main__':
   path.append(dir('.'))
 
   args = parse_args()
-  results = main.generate_report(args.file, args.exchange, 'csv')
+  print("Generating report for {} based on data in {}.\n\n".format(args.exchange.capitalize(), args.file))
+  results = orchestrator.generate_report(args.file, args.exchange, 'csv')
   print('\n'.join(results))

@@ -12,9 +12,9 @@ class ShakepayConverterTest(unittest.TestCase):
 
     self.assertEqual('', result.currency)
     self.assertEqual('', result.date)
-    self.assertEqual(0, result.rate)
-    self.assertEqual(0, result.deposit)
-    self.assertEqual('', result.cost)
+    self.assertEqual('0.0', result.rate)
+    self.assertEqual('0.0', result.deposit)
+    self.assertEqual('0.0', result.cost)
 
   def test_with_data(self):
     data = {'Date': '2018-05-18T13:08:40+00',
@@ -27,6 +27,6 @@ class ShakepayConverterTest(unittest.TestCase):
 
     self.assertEqual('BTC', result.currency)
     self.assertEqual('05/18/2018 09:08:40', result.date)
-    self.assertEqual(1234.56, result.rate)
-    self.assertEqual(0.123, result.deposit)
+    self.assertEqual('1234.56', result.rate)
+    self.assertEqual('0.123', result.deposit)
     self.assertEqual('111.22', result.cost)
