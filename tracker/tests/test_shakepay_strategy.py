@@ -3,6 +3,11 @@ import unittest
 
 from model.entry import Entry
 from strategy.shakepay import ShakepayStrategy
+from tests import helpers
+
+
+SHAKEPAY_RESOURCES_PATH = helpers.TEST_RESOURCES_PATH + ['shakepay']
+
 
 class ShakepayStrategyTest(unittest.TestCase):
   def setUp(self):
@@ -11,12 +16,12 @@ class ShakepayStrategyTest(unittest.TestCase):
   def test_convert_data_empty_file(self):
     expected = []
 
-    self.assert_convert_data(expected, 'empty.csv')
+    self._assert_convert_data(expected, 'empty.csv', helpers.TEST_RESOURCES_PATH)
 
   def test_convert_data_headers_only(self):
     expected = []
 
-    self.assert_convert_data(expected, 'headers_only.csv')
+    self._assert_convert_data(expected, 'headers_only.csv', SHAKEPAY_RESOURCES_PATH)
 
   def test_convert_data(self):
     entry_0 = Entry()
@@ -75,12 +80,9 @@ class ShakepayStrategyTest(unittest.TestCase):
 
     expected = [entry_0, entry_1, entry_2]
 
-    self.assert_convert_data(expected, 'sample_data.csv')
+    self._assert_convert_data(expected, 'sample_data.csv', SHAKEPAY_RESOURCES_PATH)
 
-  def assert_convert_data(self, expected, filename):
-    result = self.strategy.convert_data(self.build_filename_with_path(filename))
+  def _assert_convert_data(self, expected, filename, file_path):
+    result = self.strategy.convert_data(helpers.get_absolute_file_path(filename, *file_path))
 
     self.assertEqual(expected, result)
-
-  def build_filename_with_path(self, filename):
-    return os.path.join(os.path.dirname(__file__), 'resources', 'shakepay', filename)
