@@ -1,9 +1,6 @@
-import re
-
-from decimal import Decimal
-
 from date.format import convert_datetime
 from model.entry import Entry
+from util.amount import format_amount
 
 class ShakepayConverter:
   DATE = 'Date'
@@ -20,18 +17,8 @@ class ShakepayConverter:
 
     entry.currency = data.get(self.CREDIT_CURRENCY, '')
     entry.date = convert_datetime(data.get(self.DATE, '') + '00', self.DATETIME_FORMAT)
-    entry.rate = self._format_amount(data, self.EXCHANGE_RATE)
-    entry.deposit = self._format_amount(data, self.AMOUNT_CREDITED)
-    entry.cost = self._format_amount(data, self.AMOUNT_DEBITED)
+    entry.rate = format_amount(data.get(self.EXCHANGE_RATE, 0.0))
+    entry.deposit = format_amount(data.get(self.AMOUNT_CREDITED, 0.0))
+    entry.cost = format_amount(data.get(self.AMOUNT_DEBITED, 0.0))
 
     return entry
-
-  def _format_amount(self, data, field):
-    formatted_decimal_number = '{:.20f}'.format(Decimal(data.get(field, 0.0)))
-
-    if formatted_decimal_number == '0.00000000000000000000':
-      return '0.0'
-
-    matcher = re.search(r'([0-9]+\.([0-9]*[1-9]+|0))(0*)', formatted_decimal_number)
-
-    return matcher.group(1)
