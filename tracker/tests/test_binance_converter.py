@@ -49,6 +49,22 @@ class BinanceConverterTest(unittest.TestCase):
 
     self._assert_convert(expected, data)
 
+  def test_convert_fee_only(self):
+    expected = Entry()
+    expected.currency = 'BNB'
+    expected.date = '06/15/2018 12:59:59'
+    expected.deposit = '0.0'
+    expected.fee = '1.234'
+
+    data = {'Date(UTC)': '2018-06-15 16:59:59',
+            'Currency': 'BNB',
+            'Type': 'BUY',
+            'Amount': '0',
+            'Fee': '1.234'
+            }
+
+    self._assert_convert(expected, data)
+
   def _assert_convert(self, expected, data):
     result = self.converter.convert(data)
 
