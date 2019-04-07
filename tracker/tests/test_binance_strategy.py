@@ -11,6 +11,7 @@ SHAKEPAY_RESOURCES_PATH = helpers.TEST_RESOURCES_PATH + ['binance']
 
 
 class BinanceStrategyTest(unittest.TestCase):
+
   def setUp(self):
     self.strategy = BinanceStrategy()
 
@@ -18,6 +19,11 @@ class BinanceStrategyTest(unittest.TestCase):
     expected = []
 
     self._assert_convert_data(expected, 'empty.csv', helpers.TEST_RESOURCES_PATH)
+
+  def test_convert_data_headers_only(self):
+    expected = []
+
+    self._assert_convert_data(expected, 'headers_only.csv', SHAKEPAY_RESOURCES_PATH)
 
   def _assert_convert_data(self, expected, filename, file_path):
     result = self.strategy.convert_data(helpers.get_absolute_file_path(filename, *file_path))

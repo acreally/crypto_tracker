@@ -2,6 +2,7 @@ from date.format import convert_datetime
 from model.entry import Entry
 from util.amount import format_amount
 
+
 class ShakepayConverter:
   DATE = 'Date'
   AMOUNT_DEBITED = 'Amount Debited'
@@ -10,7 +11,6 @@ class ShakepayConverter:
   EXCHANGE_RATE = 'Exchange Rate'
 
   DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
-
 
   def convert(self, data):
     entry = Entry()
