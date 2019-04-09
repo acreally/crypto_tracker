@@ -14,6 +14,7 @@ class BinanceStrategy(BaseStrategy):
   TYPE = 'Type'
   PRICE = 'Price'
   AMOUNT = 'Amount'
+  TOTAL = 'Total'
   FEE = 'Fee'
   FEE_COIN = 'Fee Coin'
 
@@ -31,28 +32,36 @@ class BinanceStrategy(BaseStrategy):
     with open(filename) as csvfile:
       reader = csv.DictReader(csvfile)
       for row in reader:
-        converted_data.append(self.converter.convert(row))
+        transactions = self._split_transaction(row)
+        for transaction in transactions:
+          converted_data.append(self.converter.convert(transaction))
 
     return converted_data
 
   def _split_transaction(self, transaction):
-    transactions = []
+    date = transaction.get(self.DATE)
     market = transaction.get(self.MARKET)
+    transaciton_type = transaction.get(self.TYPE)
+    price = transaction.get(self.PRICE)
+    amount = transaction.get(self.AMOUNT)
+    total = transaction.get(self.TOTAL)
+    fee = transaction.get(self.FEE)
+    fee_currency = transaction.get(self.FEE_COIN)
 
     pattern = '(.*)({})'.format('|'.join(BASE_MARKET_CURRENCIES))
     currencies = re.findall(pattern, market)
 
-    transaciton_type = transaction.get(self.TYPE)
-
+    transactions = []
     if transaciton_type == self.TRANSACTION_TYPE_BUY:
-      transactions += self._split_buy_transaction(transaction, currencies[0][0], transaction.get(self.AMOUNT))
+      transactions += self._split_buy_transaction(date, currencies[0][0], amount, fee, fee_currency)
+      transactions.append(self._build_sell_transaction(date, currencies[0][1], total))
+    else:
+      transactions += self._split_buy_transaction(date, currencies[0][1], total, fee, fee_currency)
+      transactions.append(self._build_sell_transaction(date, currencies[0][0], amount))
 
     return transactions
 
-  def _split_buy_transaction(self, transaction, currency, amount):
-    date = transaction.get(self.DATE)
-    fee = transaction.get(self.FEE)
-    fee_currency = transaction.get(self.FEE_COIN)
+  def _split_buy_transaction(self, date, currency, amount, fee, fee_currency):
     transactions = []
 
     buy_transaction = {self.DATE: date,
@@ -61,7 +70,7 @@ class BinanceStrategy(BaseStrategy):
                        self.AMOUNT: amount
                        }
 
-    if transaction.get(self.FEE_COIN) == currency:
+    if fee_currency == currency:
       buy_transaction[self.FEE] = fee
     else:
       buy_transaction[self.FEE] = '0'
@@ -77,4 +86,12 @@ class BinanceStrategy(BaseStrategy):
             self.TYPE: self.TRANSACTION_TYPE_BUY,
             self.AMOUNT: '0',
             self.FEE: fee
+            }
+
+  def _build_sell_transaction(self, date, currency, amount):
+    return {self.DATE: date,
+            self.CURRENCY: currency,
+            self.TYPE: self.TRANSACTION_TYPE_SELL,
+            self.AMOUNT: amount,
+            self.FEE: '0'
             }
