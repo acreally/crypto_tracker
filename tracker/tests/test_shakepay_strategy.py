@@ -1,6 +1,10 @@
 import os
 import unittest
 
+from datetime import datetime
+from decimal import Decimal
+from pytz import timezone
+
 from model.entry import Entry
 from strategy.shakepay import ShakepayStrategy
 from tests import helpers
@@ -10,6 +14,7 @@ SHAKEPAY_RESOURCES_PATH = helpers.TEST_RESOURCES_PATH + ['shakepay']
 
 
 class ShakepayStrategyTest(unittest.TestCase):
+
   def setUp(self):
     self.strategy = ShakepayStrategy()
 
@@ -26,57 +31,24 @@ class ShakepayStrategyTest(unittest.TestCase):
   def test_convert_data(self):
     entry_0 = Entry()
     entry_0.currency = 'BTC'
-    entry_0.date = '05/18/2018 09:08:40'
-    entry_0.rate = '10343.0693'
-    entry_0.deposit = '0.0000001'
-    entry_0.cost = '100.0'
-    entry_0.withdrawl = ''
-    entry_0.proceeds = ''
-    entry_0.average_cost_basis = ''
-    entry_0.fee = ''
-    entry_0.fee_cost = ''
-    entry_0.sell_fee = ''
-    entry_0.network_fee = ''
-    entry_0.running_deposits = ''
-    entry_0.running_total_cost = ''
-    entry_0.running_average_cost = ''
-    entry_0.note = ''
+    entry_0.date = datetime.fromtimestamp(1526648920, timezone('US/Eastern'))
+    entry_0.rate = Decimal('10343.0693')
+    entry_0.deposit = Decimal('0.0000001')
+    entry_0.cost = Decimal('100.0')
 
     entry_1 = Entry()
     entry_1.currency = 'ABC'
-    entry_1.date = '06/02/2018 00:32:20'
-    entry_1.rate = '9663.5397'
-    entry_1.deposit = '123.456'
-    entry_1.cost = '400.0'
-    entry_1.withdrawl = ''
-    entry_1.proceeds = ''
-    entry_1.average_cost_basis = ''
-    entry_1.fee = ''
-    entry_1.fee_cost = ''
-    entry_1.sell_fee = ''
-    entry_1.network_fee = ''
-    entry_1.running_deposits = ''
-    entry_1.running_total_cost = ''
-    entry_1.running_average_cost = ''
-    entry_1.note = ''
+    entry_1.date = datetime.fromtimestamp(1527913940, timezone('US/Eastern'))
+    entry_1.rate = Decimal('9663.5397')
+    entry_1.deposit = Decimal('123.456')
+    entry_1.cost = Decimal('400.0')
 
     entry_2 = Entry()
     entry_2.currency = 'ETH'
-    entry_2.date = '07/04/2018 23:25:08'
-    entry_2.rate = '8552.2188'
-    entry_2.deposit = '0.01987'
-    entry_2.cost = '125.0'
-    entry_2.withdrawl = ''
-    entry_2.proceeds = ''
-    entry_2.average_cost_basis = ''
-    entry_2.fee = ''
-    entry_2.fee_cost = ''
-    entry_2.sell_fee = ''
-    entry_2.network_fee = ''
-    entry_2.running_deposits = ''
-    entry_2.running_total_cost = ''
-    entry_2.running_average_cost = ''
-    entry_2.note = ''
+    entry_2.date = datetime.fromtimestamp(1530761108, timezone('US/Eastern'))
+    entry_2.rate = Decimal('8552.2188')
+    entry_2.deposit = Decimal('0.01987')
+    entry_2.cost = Decimal('125.0')
 
     expected = [entry_0, entry_1, entry_2]
 

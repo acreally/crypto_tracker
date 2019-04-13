@@ -44,7 +44,7 @@ class BinanceConverter:
     entry.currency = data.get('Currency', '')
     entry.date = convert_datetime(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
     entry.deposit = format_amount(data.get(self.AMOUNT, 0.0))
-    entry.fee =  format_amount(data.get(self.FEE, 0.0))
+    entry.fee = format_amount(data.get(self.FEE, 0.0))
 
   def _convert_sell_transaction(self, data, entry):
     entry.currency = data.get('Currency', '')

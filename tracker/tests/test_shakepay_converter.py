@@ -1,5 +1,9 @@
 import unittest
 
+from datetime import datetime
+from decimal import Decimal
+from pytz import timezone
+
 from converter.shakepay import ShakepayConverter
 from model.entry import Entry
 
@@ -11,19 +15,16 @@ class ShakepayConverterTest(unittest.TestCase):
 
   def test_no_data(self):
     expected = Entry()
-    expected.rate = '0.0'
-    expected.deposit = '0.0'
-    expected.cost = '0.0'
 
     self._assert_convert(expected, {})
 
   def test_with_data(self):
     expected = Entry()
     expected.currency = 'BTC'
-    expected.date = '05/18/2018 09:08:40'
-    expected.rate = '1234.56'
-    expected.deposit = '0.123'
-    expected.cost = '111.22'
+    expected.date = datetime.fromtimestamp(1526648920, timezone('US/Eastern'))
+    expected.rate = Decimal('1234.56')
+    expected.deposit = Decimal('0.123')
+    expected.cost = Decimal('111.22')
 
     data = {'Date': '2018-05-18T13:08:40+00',
             'Amount Debited': '111.22',
