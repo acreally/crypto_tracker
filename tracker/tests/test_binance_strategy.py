@@ -1,11 +1,13 @@
 import os
 import unittest
 
+from datetime import datetime
+from decimal import Decimal
+from pytz import timezone
+
 from model.entry import Entry
 from strategy.binance import BinanceStrategy
-
 from tests import helpers
-
 
 SHAKEPAY_RESOURCES_PATH = helpers.TEST_RESOURCES_PATH + ['binance']
 
@@ -190,19 +192,19 @@ class BinanceStrategyTest(unittest.TestCase):
 
   def _build_buy_entry(self, currency, deposit, fee):
     entry = self._build_entry(currency)
-    entry.deposit = deposit
-    entry.fee = fee
+    entry.deposit = Decimal(deposit)
+    entry.fee = Decimal(fee)
     return entry
 
   def _build_sell_entry(self, currency, withdrawl):
     entry = self._build_entry(currency)
-    entry.withdrawl = withdrawl
+    entry.withdrawl = Decimal(withdrawl)
     return entry
 
   def _build_entry(self, currency):
     entry = Entry()
     entry.currency = currency
-    entry.date = '01/20/2018 11:59:59'
+    entry.date = datetime.fromtimestamp(1516467599, timezone('US/Eastern'))
     return entry
 
   def _assert_convert_data(self, expected, filename, file_path):

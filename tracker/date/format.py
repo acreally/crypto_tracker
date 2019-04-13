@@ -4,10 +4,9 @@ from pytz import timezone
 DATETIME_FORMAT = '%m/%d/%Y %H:%M:%S'
 
 
-def convert_datetime(value: str, datetime_format: str) -> str:
+def format_datetime(datetime_value: datetime) -> str:
   try:
-    given_datetime_local_tz = convert_datetime_to_local_timezone(value, datetime_format)
-    return given_datetime_local_tz.strftime(DATETIME_FORMAT)
+    return datetime_value.strftime(DATETIME_FORMAT)
   except:
     return ''
 

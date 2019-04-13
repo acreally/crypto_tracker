@@ -35,3 +35,9 @@ class Entry:
 
   def set_cost(self, new_cost: str) -> None:
     self.cost = Decimal(new_cost)
+
+  def set_withdrawl(self, new_withdrawl: str) -> None:
+    self.withdrawl = Decimal(new_withdrawl)
+
+  def set_fee(self, new_fee: str) -> None:
+    self.fee = Decimal(new_fee)

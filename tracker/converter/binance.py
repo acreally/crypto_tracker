@@ -1,6 +1,4 @@
-from date.format import convert_datetime
 from model.entry import Entry
-from util.amount import format_amount
 
 
 class BinanceConverter:
@@ -42,11 +40,11 @@ class BinanceConverter:
 
   def _convert_buy_transaction(self, data, entry):
     entry.currency = data.get('Currency', '')
-    entry.date = convert_datetime(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-    entry.deposit = format_amount(data.get(self.AMOUNT, 0.0))
-    entry.fee = format_amount(data.get(self.FEE, 0.0))
+    entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
+    entry.set_deposit(data.get(self.AMOUNT, '0.0'))
+    entry.set_fee(data.get(self.FEE, '0.0'))
 
   def _convert_sell_transaction(self, data, entry):
     entry.currency = data.get('Currency', '')
-    entry.date = convert_datetime(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-    entry.withdrawl = format_amount(data.get(self.AMOUNT, 0.0))
+    entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
+    entry.set_withdrawl(data.get(self.AMOUNT, 0.0))

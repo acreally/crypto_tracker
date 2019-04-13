@@ -1,5 +1,9 @@
 import unittest
 
+from datetime import datetime
+from decimal import Decimal
+from pytz import timezone
+
 from converter.binance import BinanceConverter
 from model.entry import Entry
 
@@ -19,9 +23,9 @@ class BinanceConverterTest(unittest.TestCase):
     # 2018-01-20 16:59:59,XLMETH,BUY,0.00012345,123,0.01518435,0.123,XLM
     expected = Entry()
     expected.currency = 'XLM'
-    expected.date = '01/20/2018 11:59:59'
-    expected.deposit = '123.0'
-    expected.fee = '0.123'
+    expected.date = datetime.fromtimestamp(1516467599, timezone('US/Eastern'))
+    expected.deposit = Decimal('123.0')
+    expected.fee = Decimal('0.123')
 
     data = {'Date(UTC)': '2018-01-20 16:59:59',
             'Currency': 'XLM',
@@ -37,8 +41,8 @@ class BinanceConverterTest(unittest.TestCase):
     # 2018-01-20 16:59:59,XLMETH,BUY,0.00012345,123,0.01518435,0.123,XLM
     expected = Entry()
     expected.currency = 'ETH'
-    expected.date = '01/20/2018 11:59:59'
-    expected.withdrawl = '0.01518435'
+    expected.date = datetime.fromtimestamp(1516467599, timezone('US/Eastern'))
+    expected.withdrawl = Decimal('0.01518435')
 
     data = {'Date(UTC)': '2018-01-20 16:59:59',
             'Currency': 'ETH',
@@ -52,9 +56,9 @@ class BinanceConverterTest(unittest.TestCase):
   def test_convert_fee_only(self):
     expected = Entry()
     expected.currency = 'BNB'
-    expected.date = '06/15/2018 12:59:59'
-    expected.deposit = '0.0'
-    expected.fee = '1.234'
+    expected.date = datetime.fromtimestamp(1529081999, timezone('US/Eastern'))
+    expected.deposit = Decimal('0.0')
+    expected.fee = Decimal('1.234')
 
     data = {'Date(UTC)': '2018-06-15 16:59:59',
             'Currency': 'BNB',
