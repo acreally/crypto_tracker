@@ -1,55 +1,64 @@
 import os
 import unittest
 
+from datetime import datetime
+from decimal import Decimal
+
 from model.entry import Entry
+from model.types import TransactionTypes
 from format.csv import CsvFormatter
 
-class ShakepayStrategyTest(unittest.TestCase):
+
+class CsvFormatterTest(unittest.TestCase):
+
   def setUp(self):
     self.formatter = CsvFormatter()
 
   def test_format_no_data(self):
     expected = []
 
-    self.assert_format(expected, None)
+    self._assert_format(expected, None)
 
   def test_format_empty_data(self):
     expected = []
 
-    self.assert_format(expected, [])
+    self._assert_format(expected, [])
 
-  def test_format_one_entry(self):
-    expected = [self.build_expected_formatted_data('1')]
+  def test_format_one_buy_entry(self):
+    expected = [self._build_expected_buy_formatted_data('1')]
 
-    entry = self.build_entry('1')
+    entry = self._build_entry('1', TransactionTypes.BUY)
 
-    self.assert_format(expected, [entry])
+    self._assert_format(expected, [entry])
 
-  def assert_format(self, expected, data):
+  def test_format_one_sell_entry(self):
+    expected = [self._build_expected_sell_formatted_data('1')]
+
+    entry = self._build_entry('1', TransactionTypes.SELL)
+
+    self._assert_format(expected, [entry])
+
+  def _assert_format(self, expected, data):
     result = self.formatter.format(data)
 
     self.assertEqual(expected, result)
 
-  def build_entry(self, id):
+  def _build_entry(self, id, transaction_type):
     entry = Entry()
     entry.currency = 'A' + id
-    entry.date = 'B' + id
-    entry.rate = 1
-    entry.deposit = 2
-    entry.cost = 'C' + id
-    entry.withdrawl = 3
-    entry.proceeds = 'D' + id
-    entry.average_cost_basis = 'E' + id
-    entry.fee = 4
-    entry.fee_cost = 'F' + id
-    entry.sell_fee = 5
-    entry.network_fee = 6
-    entry.running_deposits = 'G' + id
-    entry.running_total_cost = 'H' + id
-    entry.running_average_cost = 'I' + id
-    entry.note = 'J' + id
+    entry.date = datetime.fromtimestamp(1526634520)
+    entry.transaction_type = transaction_type
+    entry.rate = Decimal(1)
+    entry.amount = Decimal(2)
+    entry.cost = Decimal(3)
+    entry.fee = Decimal(4)
+    entry.fee_cost = Decimal(5)
+    entry.note = 'C' + id
 
     return entry
 
-  def build_expected_formatted_data(self, id):
-    return 'A' + id +',B' + id + ',1,2' + ',C' + id + ',3,D' + id + ',E' + id +',4,F' + id + ',5,6,G' + id +',H' + id +',I' + id +',J' + id
+  def _build_expected_buy_formatted_data(self, id):
+    return 'A' + id + ',05/18/2018 05:08:40' + ',1,2,3,0,0,0,4,5,0,0,0,0,0,C' + id
+
+  def _build_expected_sell_formatted_data(self, id):
+    return 'A' + id + ',05/18/2018 05:08:40' + ',1,0,3,2,6,0,4,5,0,0,0,0,0,C' + id

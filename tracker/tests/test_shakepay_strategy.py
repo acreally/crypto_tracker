@@ -6,6 +6,7 @@ from decimal import Decimal
 from pytz import timezone
 
 from model.entry import Entry
+from model.types import TransactionTypes
 from strategy.shakepay import ShakepayStrategy
 from tests import helpers
 
@@ -32,23 +33,26 @@ class ShakepayStrategyTest(unittest.TestCase):
     entry_0 = Entry()
     entry_0.currency = 'BTC'
     entry_0.date = datetime.fromtimestamp(1526648920, timezone('US/Eastern'))
+    entry_0.transaction_type = TransactionTypes.BUY
     entry_0.rate = Decimal('10343.0693')
-    entry_0.deposit = Decimal('0.0000001')
-    entry_0.cost = Decimal('100.0')
+    entry_0.amount = Decimal('0.0000001')
+    entry_0.cost = Decimal('100')
 
     entry_1 = Entry()
     entry_1.currency = 'ABC'
     entry_1.date = datetime.fromtimestamp(1527913940, timezone('US/Eastern'))
+    entry_1.transaction_type = TransactionTypes.BUY
     entry_1.rate = Decimal('9663.5397')
-    entry_1.deposit = Decimal('123.456')
-    entry_1.cost = Decimal('400.0')
+    entry_1.amount = Decimal('123.456')
+    entry_1.cost = Decimal('400')
 
     entry_2 = Entry()
     entry_2.currency = 'ETH'
     entry_2.date = datetime.fromtimestamp(1530761108, timezone('US/Eastern'))
+    entry_2.transaction_type = TransactionTypes.BUY
     entry_2.rate = Decimal('8552.2188')
-    entry_2.deposit = Decimal('0.01987')
-    entry_2.cost = Decimal('125.0')
+    entry_2.amount = Decimal('0.01987')
+    entry_2.cost = Decimal('125')
 
     expected = [entry_0, entry_1, entry_2]
 

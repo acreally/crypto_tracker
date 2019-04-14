@@ -6,6 +6,7 @@ from decimal import Decimal
 from pytz import timezone
 
 from model.entry import Entry
+from model.types import TransactionTypes
 from strategy.binance import BinanceStrategy
 from tests import helpers
 
@@ -192,13 +193,15 @@ class BinanceStrategyTest(unittest.TestCase):
 
   def _build_buy_entry(self, currency, deposit, fee):
     entry = self._build_entry(currency)
-    entry.deposit = Decimal(deposit)
+    entry.transaction_type = TransactionTypes.BUY
+    entry.amount = Decimal(deposit)
     entry.fee = Decimal(fee)
     return entry
 
   def _build_sell_entry(self, currency, withdrawl):
     entry = self._build_entry(currency)
-    entry.withdrawl = Decimal(withdrawl)
+    entry.transaction_type = TransactionTypes.SELL
+    entry.amount = Decimal(withdrawl)
     return entry
 
   def _build_entry(self, currency):

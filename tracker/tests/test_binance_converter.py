@@ -6,6 +6,7 @@ from pytz import timezone
 
 from converter.binance import BinanceConverter
 from model.entry import Entry
+from model.types import TransactionTypes
 
 
 class BinanceConverterTest(unittest.TestCase):
@@ -24,7 +25,8 @@ class BinanceConverterTest(unittest.TestCase):
     expected = Entry()
     expected.currency = 'XLM'
     expected.date = datetime.fromtimestamp(1516467599, timezone('US/Eastern'))
-    expected.deposit = Decimal('123.0')
+    expected.transaction_type = TransactionTypes.BUY
+    expected.amount = Decimal('123.0')
     expected.fee = Decimal('0.123')
 
     data = {'Date(UTC)': '2018-01-20 16:59:59',
@@ -42,7 +44,8 @@ class BinanceConverterTest(unittest.TestCase):
     expected = Entry()
     expected.currency = 'ETH'
     expected.date = datetime.fromtimestamp(1516467599, timezone('US/Eastern'))
-    expected.withdrawl = Decimal('0.01518435')
+    expected.transaction_type = TransactionTypes.SELL
+    expected.amount = Decimal('0.01518435')
 
     data = {'Date(UTC)': '2018-01-20 16:59:59',
             'Currency': 'ETH',
@@ -57,7 +60,8 @@ class BinanceConverterTest(unittest.TestCase):
     expected = Entry()
     expected.currency = 'BNB'
     expected.date = datetime.fromtimestamp(1529081999, timezone('US/Eastern'))
-    expected.deposit = Decimal('0.0')
+    expected.transaction_type = TransactionTypes.BUY
+    expected.amount = Decimal('0.0')
     expected.fee = Decimal('1.234')
 
     data = {'Date(UTC)': '2018-06-15 16:59:59',

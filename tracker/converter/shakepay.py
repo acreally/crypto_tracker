@@ -2,6 +2,7 @@ from decimal import Decimal
 
 
 from model.entry import Entry
+from model.types import TransactionTypes
 
 
 class ShakepayConverter:
@@ -18,8 +19,9 @@ class ShakepayConverter:
 
     entry.currency = data.get(self.CREDIT_CURRENCY, '')
     entry.set_date(data.get(self.DATE, '') + '00', self.DATETIME_FORMAT)
+    entry.transaction_type = TransactionTypes.BUY
     entry.set_rate(data.get(self.EXCHANGE_RATE, '0.0'))
-    entry.set_deposit(data.get(self.AMOUNT_CREDITED, '0.0'))
+    entry.set_amount(data.get(self.AMOUNT_CREDITED, '0.0'))
     entry.set_cost(data.get(self.AMOUNT_DEBITED, '0.0'))
 
     return entry

@@ -6,6 +6,7 @@ from pytz import timezone
 
 from converter.shakepay import ShakepayConverter
 from model.entry import Entry
+from model.types import TransactionTypes
 
 
 class ShakepayConverterTest(unittest.TestCase):
@@ -15,6 +16,7 @@ class ShakepayConverterTest(unittest.TestCase):
 
   def test_no_data(self):
     expected = Entry()
+    expected.transaction_type = TransactionTypes.BUY
 
     self._assert_convert(expected, {})
 
@@ -22,8 +24,9 @@ class ShakepayConverterTest(unittest.TestCase):
     expected = Entry()
     expected.currency = 'BTC'
     expected.date = datetime.fromtimestamp(1526648920, timezone('US/Eastern'))
+    expected.transaction_type = TransactionTypes.BUY
     expected.rate = Decimal('1234.56')
-    expected.deposit = Decimal('0.123')
+    expected.amount = Decimal('0.123')
     expected.cost = Decimal('111.22')
 
     data = {'Date': '2018-05-18T13:08:40+00',

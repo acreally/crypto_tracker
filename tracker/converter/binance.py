@@ -1,4 +1,5 @@
 from model.entry import Entry
+from model.types import TransactionTypes
 
 
 class BinanceConverter:
@@ -41,10 +42,12 @@ class BinanceConverter:
   def _convert_buy_transaction(self, data, entry):
     entry.currency = data.get('Currency', '')
     entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-    entry.set_deposit(data.get(self.AMOUNT, '0.0'))
+    entry.transaction_type = TransactionTypes.BUY
+    entry.set_amount(data.get(self.AMOUNT, '0.0'))
     entry.set_fee(data.get(self.FEE, '0.0'))
 
   def _convert_sell_transaction(self, data, entry):
     entry.currency = data.get('Currency', '')
     entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-    entry.set_withdrawl(data.get(self.AMOUNT, 0.0))
+    entry.transaction_type = TransactionTypes.SELL
+    entry.set_amount(data.get(self.AMOUNT, 0.0))
