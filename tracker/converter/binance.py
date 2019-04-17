@@ -1,3 +1,4 @@
+from metrics.cryptocompare import CryptoCompareClient
 from model.entry import Entry
 from model.types import TransactionTypes
 
@@ -29,6 +30,9 @@ class BinanceConverter:
   2018-11-01 23:23:23,LTCBTC,SELL,0.015151,0.75,0.01136325,0.00151515,BNB
   '''
 
+  def __init__(self):
+    self.metrics_client = CryptoCompareClient()
+
   def convert(self, data):
     entry = Entry()
 
@@ -36,6 +40,10 @@ class BinanceConverter:
       self._convert_buy_transaction(data, entry)
     elif data.get(self.TYPE) == self.TRANSACTION_TYPE_SELL:
       self._convert_sell_transaction(data, entry)
+
+    rate = self.metrics_client.get_historical_price(entry.currency, 'CAD', entry.date)
+    entry.rate = rate
+    entry.cost = rate * entry.amount
 
     return entry
 

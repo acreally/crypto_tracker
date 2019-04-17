@@ -1,8 +1,8 @@
 import csv
 import re
 
-from strategy.base import BaseStrategy
 from converter.binance import BinanceConverter
+from strategy.base import BaseStrategy
 
 
 BASE_MARKET_CURRENCIES = ['BTC', 'ETH', 'BNB']
