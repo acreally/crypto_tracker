@@ -1,23 +1,22 @@
-from metrics.cryptocompare import CryptoCompareClient
 from model.entry import Entry
 from model.types import TransactionTypes
 
 
 class BinanceConverter:
-  DATE = 'Date(UTC)'
-  MARKET = 'Market'
-  TYPE = 'Type'
-  PRICE = 'Price'
-  AMOUNT = 'Amount'
-  FEE = 'Fee'
-  FEE_COIN = 'Fee Coin'
+    DATE = 'Date(UTC)'
+    MARKET = 'Market'
+    TYPE = 'Type'
+    PRICE = 'Price'
+    AMOUNT = 'Amount'
+    FEE = 'Fee'
+    FEE_COIN = 'Fee Coin'
 
-  TRANSACTION_TYPE_BUY = 'BUY'
-  TRANSACTION_TYPE_SELL = 'SELL'
+    TRANSACTION_TYPE_BUY = 'BUY'
+    TRANSACTION_TYPE_SELL = 'SELL'
 
-  DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S%z'
+    DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S%z'
 
-  '''
+    '''
   Each entry will be 2 or 3 transactions:
   1) buy transaction for one crypto asset
   2) sell transaction for one crypto asset
@@ -30,32 +29,25 @@ class BinanceConverter:
   2018-11-01 23:23:23,LTCBTC,SELL,0.015151,0.75,0.01136325,0.00151515,BNB
   '''
 
-  def __init__(self):
-    self.metrics_client = CryptoCompareClient()
+    def convert(self, data):
+        entry = Entry()
 
-  def convert(self, data):
-    entry = Entry()
+        if data.get(self.TYPE) == self.TRANSACTION_TYPE_BUY:
+            self._convert_buy_transaction(data, entry)
+        elif data.get(self.TYPE) == self.TRANSACTION_TYPE_SELL:
+            self._convert_sell_transaction(data, entry)
 
-    if data.get(self.TYPE) == self.TRANSACTION_TYPE_BUY:
-      self._convert_buy_transaction(data, entry)
-    elif data.get(self.TYPE) == self.TRANSACTION_TYPE_SELL:
-      self._convert_sell_transaction(data, entry)
+        return entry
 
-    rate = self.metrics_client.get_historical_price(entry.currency, 'CAD', entry.date)
-    entry.rate = rate
-    entry.cost = rate * entry.amount
+    def _convert_buy_transaction(self, data, entry):
+        entry.currency = data.get('Currency', '')
+        entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
+        entry.transaction_type = TransactionTypes.BUY
+        entry.set_amount(data.get(self.AMOUNT, '0.0'))
+        entry.set_fee(data.get(self.FEE, '0.0'))
 
-    return entry
-
-  def _convert_buy_transaction(self, data, entry):
-    entry.currency = data.get('Currency', '')
-    entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-    entry.transaction_type = TransactionTypes.BUY
-    entry.set_amount(data.get(self.AMOUNT, '0.0'))
-    entry.set_fee(data.get(self.FEE, '0.0'))
-
-  def _convert_sell_transaction(self, data, entry):
-    entry.currency = data.get('Currency', '')
-    entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-    entry.transaction_type = TransactionTypes.SELL
-    entry.set_amount(data.get(self.AMOUNT, 0.0))
+    def _convert_sell_transaction(self, data, entry):
+        entry.currency = data.get('Currency', '')
+        entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
+        entry.transaction_type = TransactionTypes.SELL
+        entry.set_amount(data.get(self.AMOUNT, 0.0))

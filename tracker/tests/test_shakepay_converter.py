@@ -11,34 +11,34 @@ from model.types import TransactionTypes
 
 class ShakepayConverterTest(unittest.TestCase):
 
-  def setUp(self):
-    self.converter = ShakepayConverter()
+    def setUp(self):
+        self.converter = ShakepayConverter()
 
-  def test_no_data(self):
-    expected = Entry()
-    expected.transaction_type = TransactionTypes.BUY
+    def test_no_data(self):
+        expected = Entry()
+        expected.transaction_type = TransactionTypes.BUY
 
-    self._assert_convert(expected, {})
+        self._assert_convert(expected, {})
 
-  def test_with_data(self):
-    expected = Entry()
-    expected.currency = 'BTC'
-    expected.date = datetime.fromtimestamp(1526648920, timezone('US/Eastern'))
-    expected.transaction_type = TransactionTypes.BUY
-    expected.rate = Decimal('1234.56')
-    expected.amount = Decimal('0.123')
-    expected.cost = Decimal('111.22')
+    def test_with_data(self):
+        expected = Entry()
+        expected.currency = 'BTC'
+        expected.date = datetime.fromtimestamp(1526648920, timezone('US/Eastern'))
+        expected.transaction_type = TransactionTypes.BUY
+        expected.rate = Decimal('1234.56')
+        expected.amount = Decimal('0.123')
+        expected.cost = Decimal('111.22')
 
-    data = {'Date': '2018-05-18T13:08:40+00',
-            'Amount Debited': '111.22',
-            'Amount Credited': '0.123',
-            'Credit Currency': 'BTC',
-            'Exchange Rate': '1234.56'
-            }
+        data = {'Date': '2018-05-18T13:08:40+00',
+                'Amount Debited': '111.22',
+                'Amount Credited': '0.123',
+                'Credit Currency': 'BTC',
+                'Exchange Rate': '1234.56'
+                }
 
-    self._assert_convert(expected, data)
+        self._assert_convert(expected, data)
 
-  def _assert_convert(self, expected, data):
-    result = self.converter.convert(data)
+    def _assert_convert(self, expected, data):
+        result = self.converter.convert(data)
 
-    self.assertEqual(expected, result)
+        self.assertEqual(expected, result)
