@@ -9,7 +9,7 @@ from model.types import TransactionTypes
 from strategy.binance import BinanceStrategy
 from tests import helpers
 
-SHAKEPAY_RESOURCES_PATH = helpers.TEST_RESOURCES_PATH + ['binance']
+BINANCE_RESOURCES_PATH = helpers.TEST_RESOURCES_PATH + ['binance']
 
 
 class BinanceStrategyTest(unittest.TestCase):
@@ -158,14 +158,14 @@ class BinanceStrategyTest(unittest.TestCase):
     def test_convert_data_headers_only(self):
         expected = []
 
-        self._assert_convert_data(expected, 'headers_only.csv', SHAKEPAY_RESOURCES_PATH)
+        self._assert_convert_data(expected, 'headers_only.csv', BINANCE_RESOURCES_PATH)
 
     def test_convert_data_buy_same_fee_coin(self):
         expected_buy = self._build_buy_entry('XLM', '123.0', '0.123')
         expected_sell = self._build_sell_entry('ETH', '0.01518435')
         expected = [expected_buy, expected_sell]
 
-        self._assert_convert_data(expected, 'buy_same_fee_coin.csv', SHAKEPAY_RESOURCES_PATH)
+        self._assert_convert_data(expected, 'buy_same_fee_coin.csv', BINANCE_RESOURCES_PATH)
 
     def test_convert_data_buy_different_fee_coin(self):
         expected_fee = self._build_buy_entry('BNB', '0.0', '0.00054321')
@@ -173,14 +173,14 @@ class BinanceStrategyTest(unittest.TestCase):
         expected_sell = self._build_sell_entry('ETH', '0.01518435')
         expected = [expected_fee, expected_buy, expected_sell]
 
-        self._assert_convert_data(expected, 'buy_diff_fee_coin.csv', SHAKEPAY_RESOURCES_PATH)
+        self._assert_convert_data(expected, 'buy_diff_fee_coin.csv', BINANCE_RESOURCES_PATH)
 
     def test_convert_data_sell_same_fee_coin(self):
         expected_buy = self._build_buy_entry('ETH', '0.01518435', '0.00007592175')
         expected_sell = self._build_sell_entry('XLM', '123.0')
         expected = [expected_buy, expected_sell]
 
-        self._assert_convert_data(expected, 'sell_same_fee_coin.csv', SHAKEPAY_RESOURCES_PATH)
+        self._assert_convert_data(expected, 'sell_same_fee_coin.csv', BINANCE_RESOURCES_PATH)
 
     def test_convert_data_sell_different_fee_coin(self):
         expected_fee = self._build_buy_entry('BNB', '0.0', '0.00151515')
@@ -188,7 +188,7 @@ class BinanceStrategyTest(unittest.TestCase):
         expected_sell = self._build_sell_entry('XLM', '123.0')
         expected = [expected_fee, expected_buy, expected_sell]
 
-        self._assert_convert_data(expected, 'sell_diff_fee_coin.csv', SHAKEPAY_RESOURCES_PATH)
+        self._assert_convert_data(expected, 'sell_diff_fee_coin.csv', BINANCE_RESOURCES_PATH)
 
     def _build_buy_entry(self, currency, deposit, fee):
         entry = self._build_entry(currency)
