@@ -1,5 +1,6 @@
+import re
+
 from model.entry import Entry
-from model.types import TransactionTypes
 
 
 class BinanceConverter:
@@ -8,11 +9,14 @@ class BinanceConverter:
     TYPE = 'Type'
     PRICE = 'Price'
     AMOUNT = 'Amount'
+    TOTAL = 'Total'
     FEE = 'Fee'
     FEE_COIN = 'Fee Coin'
 
     TRANSACTION_TYPE_BUY = 'BUY'
     TRANSACTION_TYPE_SELL = 'SELL'
+
+    BASE_MARKET_CURRENCIES = ['BTC', 'ETH', 'BNB']
 
     DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S%z'
 
@@ -30,24 +34,54 @@ class BinanceConverter:
   '''
 
     def convert(self, data):
+        if data is None or type(data) != dict or len(data) == 0:
+            return []
+
+        entry = Entry()
+        entries = [entry]
+
+        transaction_date = data.get(self.DATE, '') + '+0000'
+
+        credit_currency, debit_currency = self._split_currencies(data.get(self.MARKET), data.get(self.TYPE))
+        credit_amount, debit_amount = self._split_amounts(data.get(self.AMOUNT, '0.0'), data.get(self.TOTAL, '0.0'), data.get(self.TYPE))
+
+        fee_currency = data.get(self.FEE_COIN)
+        fee = data.get(self.FEE, '0.0')
+
+        entry.set_date(transaction_date, self.DATETIME_FORMAT)
+        entry.credit_currency = credit_currency
+        entry.debit_currency = debit_currency
+        entry.set_price(data.get(self.PRICE))
+        entry.set_credit_amount(credit_amount)
+        entry.set_debit_amount(debit_amount)
+
+        if fee_currency == credit_currency:
+            entry.set_fee(fee)
+        else:
+            entries.append(self._build_fee_entry(transaction_date, fee_currency, fee))
+
+        return entries
+
+    def _split_currencies(self, market, type):
+        pattern = '(.*)({})'.format('|'.join(self.BASE_MARKET_CURRENCIES))
+        currencies = re.findall(pattern, market)[0]
+
+        if type == self.TRANSACTION_TYPE_BUY:
+            return currencies[0], currencies[1]
+        elif type == self.TRANSACTION_TYPE_SELL:
+            return currencies[1], currencies[0]
+
+    def _split_amounts(self, amount, total, type):
+        if type == self.TRANSACTION_TYPE_BUY:
+            return amount, total
+        elif type == self.TRANSACTION_TYPE_SELL:
+            return total, amount
+
+    def _build_fee_entry(self, transaction_date, fee_coin, fee):
         entry = Entry()
 
-        if data.get(self.TYPE) == self.TRANSACTION_TYPE_BUY:
-            self._convert_buy_transaction(data, entry)
-        elif data.get(self.TYPE) == self.TRANSACTION_TYPE_SELL:
-            self._convert_sell_transaction(data, entry)
+        entry.set_date(transaction_date, self.DATETIME_FORMAT)
+        entry.debit_currency = fee_coin
+        entry.set_fee(fee)
 
         return entry
-
-    def _convert_buy_transaction(self, data, entry):
-        entry.currency = data.get('Currency', '')
-        entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-        entry.transaction_type = TransactionTypes.BUY
-        entry.set_amount(data.get(self.AMOUNT, '0.0'))
-        entry.set_fee(data.get(self.FEE, '0.0'))
-
-    def _convert_sell_transaction(self, data, entry):
-        entry.currency = data.get('Currency', '')
-        entry.set_date(data.get(self.DATE, '') + '+0000', self.DATETIME_FORMAT)
-        entry.transaction_type = TransactionTypes.SELL
-        entry.set_amount(data.get(self.AMOUNT, 0.0))
